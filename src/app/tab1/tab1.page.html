@@ -28,5 +28,14 @@
     <ion-card-content>
       Current Price: ${{ crypto.price }}
     </ion-card-content>
+
+    <!-- Кнопка "Добавить в избранное" -->
+    <ion-button
+      [color]="isFavorite(crypto.name) ? 'warning' : 'medium'"  
+      (click)="toggleFavorite(crypto.name)"
+      expand="block"
+    >
+      {{ isFavorite(crypto.name) ? 'Remove from Favorites' : 'Add to Favorites' }}
+    </ion-button>
   </ion-card>
 </ion-content>
