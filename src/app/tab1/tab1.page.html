@@ -7,21 +7,21 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngIf="cryptoPrices.bitcoin">
-    <ion-card-header>
-      <ion-card-title>Bitcoin</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Current Price: ${{ cryptoPrices.bitcoin.usd }}
-    </ion-card-content>
-  </ion-card>
+  <!-- Поиск по названию криптовалют -->
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    (ionInput)="filterCryptoPrices()"
+    placeholder="Search crypto by name"
+    showClearButton="focus"
+  ></ion-searchbar>
 
-  <ion-card *ngIf="cryptoPrices.ethereum">
+  <!-- Отображение списка криптовалют -->
+  <ion-card *ngFor="let crypto of filteredCryptoPrices | keyvalue">
     <ion-card-header>
-      <ion-card-title>Ethereum</ion-card-title>
+      <ion-card-title>{{ crypto.key | titlecase }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      Current Price: ${{ cryptoPrices.ethereum.usd }}
+      Current Price: ${{ crypto.value.usd }}
     </ion-card-content>
   </ion-card>
 </ion-content>
