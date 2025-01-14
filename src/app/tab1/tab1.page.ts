@@ -13,31 +13,31 @@ import { CryptoPrices } from '../models/crypto.models';  // Интерфейс �
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class Tab1Page implements OnInit {
-  cryptoPrices: CryptoPrices = {};  // Храним все данные о криптовалютах
-  filteredCryptoPrices: any[] = [];  // Массив для отфильтрованных криптовалют
-  searchTerm: string = '';  // Поисковый запрос
-  sortAscending: boolean = true;  // Флаг для сортировки по возрастанию
-  favorites: Set<string> = new Set<string>();  // Список избранных валют
+  cryptoPrices: CryptoPrices = {};
+  filteredCryptoPrices: any[] = [];
+  searchTerm: string = '';
+  sortAscending: boolean = true;
+  favorites: Set<string> = new Set<string>();
 
   constructor(private cryptoService: CryptoService) {}
 
   ngOnInit() {
     this.fetchCryptoPrices();
-    setInterval(() => this.fetchCryptoPrices(), 30000); // Обновление каждые 30 секунд
+    setInterval(() => this.fetchCryptoPrices(), 3000000); // при показе поменять обновление на 3000
 
-    // Загружаем данные об избранных валют из localStorage
+   
     const savedFavorites = localStorage.getItem('favorites');
     if (savedFavorites) {
       this.favorites = new Set(JSON.parse(savedFavorites));
     }
   }
 
-  // Метод для получения данных
+
   fetchCryptoPrices() {
     this.cryptoService.getCryptoPrices().subscribe(
       (data: CryptoPrices) => {
         this.cryptoPrices = data;
-        this.filteredCryptoPrices = this.transformData(data);  // Преобразуем данные в массив
+        this.filteredCryptoPrices = this.transformData(data); 
         this.sortCryptoPrices();  // Сортируем криптовалюты по цене при получении данных
         console.log(this.cryptoPrices);  // Для отладки
       },

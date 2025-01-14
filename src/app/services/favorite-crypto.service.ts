@@ -1,47 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class FavoriteCryptoService {
-  private storage: Storage | null = null;
+export class FavoritesService {
+  // BehaviorSubject для хранения избранных криптовалют
+  private favoritesSubject = new BehaviorSubject<string[]>([]);
+  favorites$ = this.favoritesSubject.asObservable();
 
-  constructor(private storageService: Storage) {
-    this.init();
-  }
-
-  // Инициализация хранилища
-  private async init() {
-    const storage = await this.storageService.create();
-    this.storage = storage;
-  }
-
-  // Сохранение избранных монет в хранилище
-  async addToFavorites(coin: string): Promise<void> {
-    const currentFavorites = await this.getFavorites();
-    if (!currentFavorites.includes(coin)) {
-      currentFavorites.push(coin);
-      await this.storage?.set('favorites', currentFavorites);
+  // Метод для добавления криптовалюты в избранное
+  addToFavorites(cryptoName: string) {
+    const currentFavorites = this.favoritesSubject.value;
+    if (!currentFavorites.includes(cryptoName)) {
+      this.favoritesSubject.next([...currentFavorites, cryptoName]);
     }
   }
 
-  // Удаление монеты из избранных
-  async removeFromFavorites(coin: string): Promise<void> {
-    let currentFavorites = await this.getFavorites();
-    currentFavorites = currentFavorites.filter(fav => fav !== coin);
-    await this.storage?.set('favorites', currentFavorites);
-  }
-
-  // Получение списка избранных монет
-  async getFavorites(): Promise<string[]> {
-    const favorites = await this.storage?.get('favorites');
-    return favorites || [];
-  }
-
-  // Проверка, является ли монета избранной
-  async isFavorite(coin: string): Promise<boolean> {
-    const favorites = await this.getFavorites();
-    return favorites.includes(coin);
+  // Метод для удаления криптовалюты из избранного
+  removeFromFavorites(cryptoName: string) {
+    const currentFavorites = this.favoritesSubject.value;
+    this.favoritesSubject.next(currentFavorites.filter(name => name !== cryptoName));
   }
 }

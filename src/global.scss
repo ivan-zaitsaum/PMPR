@@ -35,3 +35,17 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+
+/* Global styles */
+body {
+    --ion-background-color: #ffffff; /* Светлый фон по умолчанию */
+    --ion-text-color: #000000; /* Цвет текста для светлой темы */
+  }
+  
+  body.dark {
+    --ion-background-color: #222222; /* Темный фон */
+    --ion-text-color: #ffffff; /* Белый цвет текста для темной темы */
+  }
+  

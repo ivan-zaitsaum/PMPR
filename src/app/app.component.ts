@@ -7,5 +7,11 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    // Загрузка текущей темы при старте приложения
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+      document.body.classList.toggle('dark', true);
+    }
+  }
 }
