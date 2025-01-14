@@ -1,0 +1,7 @@
+{
+  "name": "PMPR",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
