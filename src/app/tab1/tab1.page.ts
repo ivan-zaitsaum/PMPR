@@ -18,20 +18,19 @@ export class Tab1Page implements OnInit {
   searchTerm: string = '';
   sortAscending: boolean = true;
   favorites: Set<string> = new Set<string>();
+  amountToBuy: { [key: string]: number } = {}; // Объект для хранения количества покупаемой криптовалюты
 
   constructor(private cryptoService: CryptoService) {}
 
   ngOnInit() {
     this.fetchCryptoPrices();
-    setInterval(() => this.fetchCryptoPrices(), 3000000); // при показе поменять обновление на 3000
+    setInterval(() => this.fetchCryptoPrices(), 3000000); // Обновление раз в 3000 секунд
 
-   
     const savedFavorites = localStorage.getItem('favorites');
     if (savedFavorites) {
       this.favorites = new Set(JSON.parse(savedFavorites));
     }
   }
-
 
   fetchCryptoPrices() {
     this.cryptoService.getCryptoPrices().subscribe(
@@ -94,5 +93,45 @@ export class Tab1Page implements OnInit {
   // Проверяем, добавлена ли валюта в избранное
   isFavorite(cryptoName: string): boolean {
     return this.favorites.has(cryptoName);
+  }
+
+  purchaseCrypto(cryptoName: string) {
+    const amount = this.amountToBuy[cryptoName];
+    if (amount > 0) {
+      const price = this.cryptoPrices[cryptoName]?.usd;
+      if (price) {
+        const totalCost = price * amount;
+        console.log(`Покупка ${amount} ${cryptoName} на сумму ${totalCost} USD`);
+        alert(`Вы купили ${amount} ${cryptoName} на сумму ${totalCost} USD`);
+  
+        // Загружаем список покупок из localStorage
+        const purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+  
+        // Ищем покупку для этой криптовалюты
+        const existingPurchase = purchases.find((purchase: any) => purchase.crypto === cryptoName);
+  
+        if (existingPurchase) {
+          // Если покупка уже существует, обновляем количество и общую стоимость
+          existingPurchase.amount += amount;
+          existingPurchase.totalCost += totalCost;
+        } else {
+          // Если покупки нет, добавляем новую запись
+          purchases.push({
+            crypto: cryptoName,
+            amount: amount,
+            price: price,
+            totalCost: totalCost
+          });
+        }
+  
+        // Сохраняем обновленный список покупок в localStorage
+        localStorage.setItem('purchases', JSON.stringify(purchases));
+  
+        // Сбрасываем количество после покупки
+        this.amountToBuy[cryptoName] = 0;
+      }
+    } else {
+      alert('Пожалуйста, укажите количество для покупки.');
+    }
   }
 }

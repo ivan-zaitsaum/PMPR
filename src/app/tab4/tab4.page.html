@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Favorite Crypto Prices
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Отображение списка избранных криптовалют -->
+  <ion-card *ngFor="let purchase of purchases">
+    <ion-card-header>
+      <ion-card-title>{{ purchase.crypto | titlecase }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Amount: {{ purchase.amount }} <br />
+      Price at Purchase: ${{ purchase.price }} <br />
+      Total Cost: ${{ purchase.totalCost }}
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Кнопка для очистки списка покупок -->
+  <ion-button (click)="clearPurchases()" color="danger" expand="full">
+    Clear All Purchases
+  </ion-button>
+</ion-content>

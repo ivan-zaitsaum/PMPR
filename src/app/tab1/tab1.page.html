@@ -27,15 +27,34 @@
     </ion-card-header>
     <ion-card-content>
       Current Price: ${{ crypto.price }}
-    </ion-card-content>
 
-    <!-- Кнопка "Добавить в избранное" -->
-    <ion-button
-      [color]="isFavorite(crypto.name) ? 'warning' : 'medium'"  
-      (click)="toggleFavorite(crypto.name)"
-      expand="block"
-    >
-      {{ isFavorite(crypto.name) ? 'Remove from Favorites' : 'Add to Favorites' }}
-    </ion-button>
+      <!-- Поле для ввода количества криптовалюты -->
+      <ion-item>
+        <ion-label position="stacked">Amount to Buy</ion-label>
+        <ion-input
+          type="number"
+          [(ngModel)]="amountToBuy[crypto.name]"
+          placeholder="Enter amount"
+        ></ion-input>
+      </ion-item>
+
+      <!-- Кнопка "Добавить в избранное" -->
+      <ion-button
+        [color]="isFavorite(crypto.name) ? 'warning' : 'medium'"  
+        (click)="toggleFavorite(crypto.name)"
+        expand="block"
+      >
+        {{ isFavorite(crypto.name) ? 'Remove from Favorites' : 'Add to Favorites' }}
+      </ion-button>
+
+      <!-- Кнопка для покупки криптовалюты -->
+      <ion-button
+        color="success"
+        (click)="purchaseCrypto(crypto.name)"
+        expand="block"
+      >
+        Buy {{ crypto.name | titlecase }}
+      </ion-button>
+    </ion-card-content>
   </ion-card>
 </ion-content>
