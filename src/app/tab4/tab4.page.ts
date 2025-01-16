@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CryptoService } from '../services/crypto.service';  // Импортируем сервис для получения цен
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,12 +9,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: 'tab4.page.html',
   styleUrls: ['tab4.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]  // Убедитесь, что добавлены необходимые модули
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class Tab4Page implements OnInit {
   purchases: any[] = [];  // Список покупок, которые будут отображаться
+  cryptoPrices: any = {};  // Для хранения актуальных цен
 
-  constructor() {}
+  constructor(private cryptoService: CryptoService) {}
 
   ngOnInit() {
     // Загружаем данные из localStorage, если они есть
@@ -21,22 +23,52 @@ export class Tab4Page implements OnInit {
     if (savedPurchases) {
       this.purchases = JSON.parse(savedPurchases);
     }
+
+    // Получаем актуальные цены криптовалют
+    this.fetchCryptoPrices();
   }
 
-  // Метод для переключения темы
-  toggleTheme(event: any) {
-    if (event.detail.checked) {
-      document.body.classList.add('dark');
+  // Метод для получения актуальных цен
+  fetchCryptoPrices() {
+    this.cryptoService.getCryptoPrices().subscribe(
+      (data: any) => {
+        this.cryptoPrices = data;
+      },
+      (error) => {
+        console.error('Ошибка при получении актуальных цен:', error);
+      }
+    );
+  }
+
+  // Метод для продажи криптовалюты
+  sellCrypto(purchase: any) {
+    const amountToSell = purchase.amountToSell;
+
+    if (amountToSell > 0 && amountToSell <= purchase.amount) {
+      // Уменьшаем количество криптовалюты
+      purchase.amount -= amountToSell;
+      purchase.totalCost -= purchase.price * amountToSell;
+
+      // Если количество криптовалюты стало равно нулю, удаляем запись
+      if (purchase.amount === 0) {
+        this.purchases = this.purchases.filter(p => p.crypto !== purchase.crypto);
+      }
+
+      // Сохраняем обновленный список покупок в localStorage
+      localStorage.setItem('purchases', JSON.stringify(this.purchases));
+
+      // Очищаем поле ввода
+      purchase.amountToSell = 0;
+
+      alert(`Вы продали ${amountToSell} ${purchase.crypto}.`);
     } else {
-      document.body.classList.remove('dark');
+      alert('Неверное количество для продажи.');
     }
   }
 
+  // Метод для очистки покупок
   clearPurchases() {
-    // Удаляем данные о покупках из localStorage
     localStorage.removeItem('purchases');
-    
-    // Обновляем массив покупок, чтобы интерфейс отобразил пустой список
     this.purchases = [];
   }
 }
