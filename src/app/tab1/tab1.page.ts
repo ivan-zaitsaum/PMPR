@@ -41,7 +41,7 @@ export class Tab1Page implements OnInit {
         console.log(this.cryptoPrices);  // Для отладки
       },
       (error) => {
-        console.error('Ошибка при получении данных:', error);
+        console.error('Error while receiving data:', error);
       }
     );
   }
@@ -101,8 +101,8 @@ export class Tab1Page implements OnInit {
       const price = this.cryptoPrices[cryptoName]?.usd;
       if (price) {
         const totalCost = price * amount;
-        console.log(`Покупка ${amount} ${cryptoName} на сумму ${totalCost} USD`);
-        alert(`Вы купили ${amount} ${cryptoName} на сумму ${totalCost} USD`);
+        console.log(`Purchase ${amount} ${cryptoName}  ${totalCost} USD`);
+        alert(`You bought ${amount} ${cryptoName} fot the amount ${totalCost} USD`);
   
         // Загружаем список покупок из localStorage
         const purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
@@ -131,9 +131,9 @@ export class Tab1Page implements OnInit {
         this.amountToBuy[cryptoName] = 0;
       }
     } else {
-      alert('Пожалуйста, укажите количество для покупки.');
+      alert('Please indicate the quantity to purchase.');
     }
-    
+
   }
    // Полная перезагрузка страницы при свайпе вниз
    reloadPage(event: any) {

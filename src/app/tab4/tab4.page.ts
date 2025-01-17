@@ -35,7 +35,7 @@ export class Tab4Page implements OnInit {
         this.cryptoPrices = data;
       },
       (error) => {
-        console.error('Ошибка при получении актуальных цен:', error);
+        console.error('Error when getting current prices:', error);
       }
     );
   }
@@ -60,9 +60,9 @@ export class Tab4Page implements OnInit {
       // Очищаем поле ввода
       purchase.amountToSell = 0;
 
-      alert(`Вы продали ${amountToSell} ${purchase.crypto}.`);
+      alert(`You sold ${amountToSell} ${purchase.crypto}.`);
     } else {
-      alert('Неверное количество для продажи.');
+      alert('Invaild quantity for sale');
     }
   }
 
