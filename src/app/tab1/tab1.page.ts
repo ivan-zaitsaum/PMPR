@@ -24,7 +24,7 @@ export class Tab1Page implements OnInit {
 
   ngOnInit() {
     this.fetchCryptoPrices();
-    setInterval(() => this.fetchCryptoPrices(), 3000000); // Обновление раз в 3000 секунд
+    setInterval(() => this.fetchCryptoPrices(), 1000000); // Обновление раз в 3000 секунд
 
     const savedFavorites = localStorage.getItem('favorites');
     if (savedFavorites) {
@@ -133,5 +133,14 @@ export class Tab1Page implements OnInit {
     } else {
       alert('Пожалуйста, укажите количество для покупки.');
     }
+    
+  }
+   // Полная перезагрузка страницы при свайпе вниз
+   reloadPage(event: any) {
+    window.location.reload();
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 }

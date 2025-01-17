@@ -13,7 +13,7 @@ export class CryptoService {
 
   getCryptoPrices(): Observable<any> {
     // Запрашиваем цены для нескольких криптовалют
-    const ids = ['bitcoin', 'ethereum', 'ripple', 'litecoin', 'cardano', 'polkadot', 'binancecoin', 'solana', 'dogecoin', 'shiba-inu', 'avalanche-2'];
+    const ids = ['bitcoin', 'avalanche-2']; // 'ethereum', 'ripple', 'litecoin', 'cardano', 'polkadot', 'binancecoin', 'solana', 'dogecoin', 'shiba-inu'
     const url = `${this.apiUrl}?ids=${ids.join(',')}&vs_currencies=usd`;
     return this.http.get(url);
   }

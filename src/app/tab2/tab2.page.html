@@ -1,13 +1,16 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      Favorite Crypto Prices
-    </ion-title>
+    <ion-title>Favorite Crypto Prices</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- Отображение списка избранных криптовалют -->
+  <!-- Обновление страницы при свайпе вниз -->
+  <ion-refresher slot="fixed" (ionRefresh)="reloadPage($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Список избранных криптовалют -->
   <ion-card *ngFor="let crypto of filteredCryptoPrices">
     <ion-card-header>
       <ion-card-title>{{ crypto.name | titlecase }}</ion-card-title>
@@ -15,5 +18,13 @@
     <ion-card-content>
       Current Price: ${{ crypto.price }}
     </ion-card-content>
+
+    <!-- Кнопка для удаления из избранного -->
+    <ion-button 
+      color="danger" 
+      expand="block" 
+      (click)="toggleFavorite(crypto.name)">
+      Remove from Favorites
+    </ion-button>
   </ion-card>
 </ion-content>

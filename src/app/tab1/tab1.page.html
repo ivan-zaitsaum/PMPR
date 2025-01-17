@@ -7,6 +7,11 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="reloadPage($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <!-- Поиск по названию криптовалют -->
   <ion-searchbar
     [(ngModel)]="searchTerm"

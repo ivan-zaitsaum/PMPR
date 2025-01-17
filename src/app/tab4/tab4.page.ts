@@ -71,4 +71,13 @@ export class Tab4Page implements OnInit {
     localStorage.removeItem('purchases');
     this.purchases = [];
   }
+
+   // Полная перезагрузка страницы при свайпе вниз
+   reloadPage(event: any) {
+    window.location.reload();
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
 }

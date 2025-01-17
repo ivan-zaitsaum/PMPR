@@ -10,35 +10,26 @@ import { CryptoPrices } from '../models/crypto.models';
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class Tab2Page implements OnInit {
-  cryptoPrices: CryptoPrices = {};  // Храним все данные о криптовалютах
-  filteredCryptoPrices: any[] = [];  // Массив для отфильтрованных криптовалют
-  favorites: Set<string> = new Set<string>();  // Список избранных валют
+  cryptoPrices: CryptoPrices = {}; // Храним все данные о криптовалютах
+  filteredCryptoPrices: any[] = []; // Массив для отфильтрованных криптовалют
+  favorites: Set<string> = new Set<string>(); // Список избранных валют
 
   constructor(private cryptoService: CryptoService) {}
 
   ngOnInit() {
     this.fetchCryptoPrices();
     setInterval(() => this.fetchCryptoPrices(), 30000); // Обновление каждые 30 секунд
-
-    // Загружаем данные об избранных валют из localStorage
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-      this.favorites = new Set(JSON.parse(savedFavorites));
-    }
+    this.loadFavorites();
   }
 
-  // Метод для получения данных
   fetchCryptoPrices() {
     this.cryptoService.getCryptoPrices().subscribe(
       (data: CryptoPrices) => {
         this.cryptoPrices = data;
-        this.filteredCryptoPrices = this.transformData(data).filter(crypto =>
-          this.favorites.has(crypto.name)  // Фильтруем только избранные валюты
-        );
-        console.log(this.filteredCryptoPrices);  // Для отладки
+        this.updateFilteredCryptoPrices();
       },
       (error) => {
         console.error('Ошибка при получении данных:', error);
@@ -46,11 +37,47 @@ export class Tab2Page implements OnInit {
     );
   }
 
-  // Преобразуем объект в массив
   transformData(data: CryptoPrices): any[] {
-    return Object.keys(data).map(key => ({
+    return Object.keys(data).map((key) => ({
       name: key,
-      price: data[key].usd
+      price: data[key].usd,
     }));
+  }
+
+  loadFavorites() {
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+      this.favorites = new Set(JSON.parse(savedFavorites));
+    }
+  }
+
+  updateFilteredCryptoPrices() {
+    this.filteredCryptoPrices = this.transformData(this.cryptoPrices).filter(
+      (crypto) => this.favorites.has(crypto.name)
+    );
+  }
+
+  toggleFavorite(cryptoName: string) {
+    if (this.favorites.has(cryptoName)) {
+      this.favorites.delete(cryptoName);
+    } else {
+      this.favorites.add(cryptoName);
+    }
+
+    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+    this.updateFilteredCryptoPrices();
+  }
+
+  isFavorite(cryptoName: string): boolean {
+    return this.favorites.has(cryptoName);
+  }
+
+  // Полная перезагрузка страницы при свайпе вниз
+  reloadPage(event: any) {
+    window.location.reload();
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 }

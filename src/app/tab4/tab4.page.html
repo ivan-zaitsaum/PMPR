@@ -7,6 +7,12 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="reloadPage($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  
   <!-- Отображение списка избранных криптовалют -->
   <ion-card *ngFor="let purchase of purchases">
     <ion-card-header>
